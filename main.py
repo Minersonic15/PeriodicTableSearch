@@ -24,7 +24,7 @@ class main(QWidget):
 
         with open('PeriodicTableJSON.json', 'r') as file:
             self.pTable = json.load(file)["elements"]
-        self.EL = self.pTable[119]
+        self.EL = self.pTable[0]
 
         self.Density = QLabel("")
         self.Melt = QLabel("")
@@ -239,7 +239,11 @@ class main(QWidget):
             except:
                 Thing.setValue(Value)
             Thing.blockSignals(False)
-
+        for elle in self.Collection:
+            if elle.El == self.EL:
+                elle.Label.setStyleSheet("background-color: gray;")
+            else:
+                elle.Label.setStyleSheet("background-color: white;")
 
         
 
@@ -267,7 +271,7 @@ class ElemLabel():
         self.Place()
         self.Label.clicked.connect(self.Click)
         self.Label.show()
-        
+
     def Place(self):
         self.Label.setGeometry(self.Size*(self.El["xpos"]-1), self.top+self.Size*(self.El["ypos"]-1), self.Size,self.Size)
 
