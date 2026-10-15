@@ -243,16 +243,16 @@ class main(QWidget):
         #self.element.setText(self.EL["name"])
     def Set(self):
         for Thing, Data in self.Mappings.items():
-            
-                try:
-                    Value = self.EL[Data]
-                except:
-                    Value = pTable[118][Data]
-
-                try:
-                    Thing.setText(str(Value))
-                except:
-                    Thing.setValue(Value)
+            Thing.blockSignals(True)
+            try:
+                Value = self.EL[Data]
+            except :
+                Value = pTable[119]
+            try:
+                Thing.setText(str(Value))
+            except:
+                Thing.setValue(Value)
+            Thing.blockSignals(False)
             
 
 
