@@ -2,7 +2,8 @@ import json
 import sys
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (QApplication, QWidget, QLabel, QPushButton, QVBoxLayout, QHBoxLayout, QLineEdit,QSpinBox, QDoubleSpinBox)
-
+from PyQt6.QtGui import QPixmap, QImage
+import requests
 with open('PeriodicTableJSON.json', 'r') as file:
     pTable = json.load(file)["elements"]
 print("PREIDODIC TABE!!!!!!!!!! USING JASON!!!!")
@@ -24,7 +25,7 @@ class main(QWidget):
 
         with open('PeriodicTableJSON.json', 'r') as file:
             self.pTable = json.load(file)["elements"]
-        self.EL = self.pTable[0]
+        self.EL = self.pTable[118]
 
         self.Density = QLabel("")
         self.Melt = QLabel("")
@@ -48,6 +49,7 @@ class main(QWidget):
         self.elCon = QLineEdit()
         self.elCon2 = QLineEdit()
         self.mass = QDoubleSpinBox()
+        self.url = "https://upload.wikimedia.org/wikipedia/commons/0/00/Helium-glow.jpg" 
 
         self.Mappings = {
             self.element: "name",
@@ -69,7 +71,8 @@ class main(QWidget):
             self.cat: "category",
             self.block: "block",
             self.disc: "discovered_by",
-            self.desc: "summary"
+            self.desc: "summary",
+            
 
         }
         
@@ -78,9 +81,9 @@ class main(QWidget):
         self.show()
 
         self.top = self.Thing.y()
-        
 
         self.CreateLabels()
+        self.Set()
         
     def freakingThing(self, Lay, Thing):
         Thing.addWidget(Lay)
@@ -93,6 +96,15 @@ class main(QWidget):
         self.Collection = []
         for Elle in self.pTable:
             self.Collection.append(ElemLabel(Elle, self, self.top))
+    def GetImage(self):
+        
+        output = requests.get(self.url).content
+        
+        self.image = QPixmap()
+        self.image.loadFromData(output)
+        self.ShowImage.setPixmap(self.image)
+
+
 
     def LabelTs(self):
         self.vertLay = QVBoxLayout()
@@ -110,7 +122,6 @@ class main(QWidget):
 
         self.vertLay.addLayout(symline)
 
-        self.vertLay.addWidget(QLabel("Numbers:"))
         nums = QHBoxLayout()
         
         nums.addWidget(QLabel("Atomic Number: "))
@@ -128,7 +139,7 @@ class main(QWidget):
 
         self.freakingThing2(self.per, nums)
 
-        nums.addWidget(QLabel("groupiod: "))
+        nums.addWidget(QLabel("group: "))
 
         self.group.setMinimum(1)
         self.group.setMaximum(18)
@@ -145,7 +156,7 @@ class main(QWidget):
         self.vertLay.addLayout(econ)
 
         econ = QHBoxLayout()
-        econ.addWidget(QLabel("Electron Config but short i forget what called: "))
+        econ.addWidget(QLabel("Electron Config simplified: "))
 
         self.freakingThing(self.elCon2, econ)
 
@@ -164,14 +175,14 @@ class main(QWidget):
 
         MassEtc = QHBoxLayout()
         MassEtc.addWidget(QLabel("Atomic Mass: "))
-        self.mass = QDoubleSpinBox()
+
         self.mass.setDecimals(9)
         self.freakingThing2(self.mass, MassEtc)
         MassEtc.addWidget(QLabel("Density: "))
         MassEtc.addWidget(self.Density)
         self.vertLay.addLayout(MassEtc)
 
-
+        self.vertLay.addLayout(MassEtc)
 
         NumValues = QHBoxLayout()
 
@@ -193,9 +204,6 @@ class main(QWidget):
         NumValues.addWidget(QLabel("block: "))
         NumValues.addWidget(self.block)
         
-        self.vertLay.addLayout(NumValues)
-
-        NumValues = QHBoxLayout()
 
         NumValues.addWidget(QLabel("Discovered by: "))
         NumValues.addWidget(self.disc)
@@ -205,17 +213,22 @@ class main(QWidget):
 
         NumValues.addWidget(QLabel("Description: "))
         NumValues.addWidget(self.desc)
-        self.Thing = QLabel("")
 
         self.vertLay.addLayout(NumValues)
 
-        self.vertLay.addLayout(MassEtc)
+        #self.ShowImage = QLabel()
+        #self.vertLay.addWidget(self.ShowImage)
+
+        self.Thing = QLabel("")
+
+        
+
         self.vertLay.addWidget(self.Thing)
 
         
 
         self.setLayout(self.vertLay)
-
+ 
     def OnChange(self, changed):
         
         if changed in self.Mappings:
@@ -225,32 +238,37 @@ class main(QWidget):
             except:
                 self.EL = self.FindEl(str(changed.value()), garfiel)
         self.Set()
+        
 
         #self.element.setText(self.EL["name"])
     def Set(self):
         for Thing, Data in self.Mappings.items():
-            Thing.blockSignals(True)
-            try:
-                Value = self.EL[Data]
-            except :
-                Value = pTable[119]
-            try:
-                Thing.setText(str(Value))
-            except:
-                Thing.setValue(Value)
-            Thing.blockSignals(False)
+            
+                try:
+                    Value = self.EL[Data]
+                except:
+                    Value = pTable[118][Data]
+
+                try:
+                    Thing.setText(str(Value))
+                except:
+                    Thing.setValue(Value)
+            
+
+
         for elle in self.Collection:
             if elle.El == self.EL:
                 elle.Label.setStyleSheet("background-color: gray;")
             else:
-                elle.Label.setStyleSheet("background-color: white;")
-
+                
+                elle.Label.setStyleSheet(elle.sheet)
+        #self.GetImage()
         
 
     def FindEl(self, inp, form):
         if form != "period" and form != "group":
             for element in pTable:
-                if str(element[form]) == inp:
+                if str(element[form]).lower() == inp.lower():
                     return element
         else:
             Found = False
@@ -259,14 +277,14 @@ class main(QWidget):
                     Found = True
                     return element
             if Found == False:
-                return pTable[119]
+                return pTable[118]
 
 class ElemLabel():
     def __init__(self, element, pa, top):
         self.parent = pa
         self.top = top
         self.El = element
-        self.Size = 50
+        self.Size = 35
         self.Label = QPushButton(self.El["symbol"], parent=self.parent)
         self.Place()
         self.Label.clicked.connect(self.Click)
@@ -274,7 +292,48 @@ class ElemLabel():
 
     def Place(self):
         self.Label.setGeometry(self.Size*(self.El["xpos"]-1), self.top+self.Size*(self.El["ypos"]-1), self.Size,self.Size)
+        
+        match self.El["phase"]:
+            case "Gas":
+                self.Label.setStyleSheet("color: white;")
+            case "Solid":
+                self.Label.setStyleSheet("color: black;")
+            case "Liquid":
+                self.Label.setStyleSheet("color: blue;")
+        sheet = self.Label.styleSheet()
+        match self.El["category"]:
+            case "metalloid":
+                sheet = sheet + "background-color: yellow;"
+            case "alkali metal":
+                sheet = sheet + "background-color: darkMagenta;"
+            case "alkaline earth metal":
+                sheet = sheet + "background-color: magenta;"
+            case "lanthanide":
+                sheet = sheet + "background-color: blue;"
+            case "actinide":
+                sheet = sheet + "background-color: cyan;"
+            case "transition metal":
+                sheet = sheet + "background-color: lightBlue;"
+            case "noble gas":
+                sheet = sheet + "background-color: darkRed;"
+            case "diatomic nonmetal":
+                sheet = sheet + "background-color: red;"
+            case "post-transition metal":
+                sheet = sheet + "background-color: lightGreen;"
+            case "polyatomic nonmetal":
+                sheet = sheet + "background-color: orange;"
 
+            case "unknown, probably transition metal":
+                            sheet = sheet + "background-color: lightBlue;"
+            case "unknown, probably metalloid":
+                sheet = sheet + "background-color: yellow;"
+            case "unknown, probably post-transition metal":
+                    sheet = sheet + "background-color: lightGreen;" 
+            
+        self.sheet = sheet
+        self.Label.setStyleSheet(sheet)
+
+    
     def Click(self):
         self.parent.EL = self.El
         self.parent.Set()

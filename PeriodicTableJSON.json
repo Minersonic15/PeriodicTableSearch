@@ -80,7 +80,7 @@
                 5250.5
             ],
             "cpk-hex": "d9ffff",
-            "image": {
+            "image": { 
                 "title": "Vial of glowing ultrapure helium. Original size in cm: 1 x 5",
                 "url": "https://upload.wikimedia.org/wikipedia/commons/0/00/Helium-glow.jpg",
                 "attribution": "Jurii, CC BY 3.0 <https://creativecommons.org/licenses/by/3.0>, via Wikimedia Commons, source: https://images-of-elements.com/helium.php"
@@ -6174,7 +6174,7 @@
             "appearance": null,
             "atomic_mass": 294,
             "boil": 350,
-            "category": "unknown, predicted to be noble gas",
+            "category": "noble gas",
             "density": 4.95,
             "discovered_by": "Joint Institute for Nuclear Research",
             "melt": null,
@@ -6233,7 +6233,7 @@
             "group": 0,
             "phase": "",
             "source": "trust me bro",
-            "bohr_model_image":null,
+            "bohr_model_image":"https://storage.googleapis.com/search-ar-edu/periodic-table/element_001_hydrogen/element_001_hydrogen_srp_th.png",
             "bohr_model_3d":null,
             "spectral_img": null,
             "summary": "",
@@ -6257,6 +6257,36 @@
                 "attribution": "Chemical Elements A Virtual Museum under a Creative Commons Attribution 3.0 Unported License, source: https://images-of-elements.com"
             },
             "block": ""
+        },
+        { 
+            "name": "Marko",
+            "appearance": "Marko",
+            "atomic_mass": 95,
+            "boil": 2000000000,
+            "category": "Marko",
+            "density": 100000000000000000,
+            "discovered_by": "Marko",
+            "melt": 2,
+            "molar_heat": 28.836,
+            "named_by": "Marko",
+            "number": 200,
+            "period": 200,
+            "group": 200,
+            "phase": "Marko",
+            "source": "https://en.wikipedia.org/wiki/Hydrogen",
+            "bohr_model_image": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_001_hydrogen/element_001_hydrogen_srp_th.png",
+            "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_001_hydrogen/element_001_hydrogen.glb",
+            "spectral_img": "https://en.wikipedia.org/wiki/File:Hydrogen_Spectra.jpg",
+            "summary": "Marko",
+            "symbol": "M",
+            "xpos": 0,
+            "ypos": 0,
+            "wxpos": 1,
+            "wypos": 1,
+            "shells": [
+                1
+            ]
         }
-    ]
+        
+        ]
 }
