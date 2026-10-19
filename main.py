@@ -49,7 +49,7 @@ class main(QWidget):
         self.elCon = QLineEdit()
         self.elCon2 = QLineEdit()
         self.mass = QDoubleSpinBox()
-        self.url = "https://upload.wikimedia.org/wikipedia/commons/0/00/Helium-glow.jpg" 
+        self.url = "https://storage.googleapis.com/search-ar-edu/periodic-table/element_002_helium/element_002_helium_srp_th.png" 
 
         self.Mappings = {
             self.element: "name",
@@ -72,6 +72,7 @@ class main(QWidget):
             self.block: "block",
             self.disc: "discovered_by",
             self.desc: "summary",
+            self.url: "bohr_model_image"
             
 
         }
@@ -214,17 +215,19 @@ class main(QWidget):
         NumValues.addWidget(QLabel("Description: "))
         NumValues.addWidget(self.desc)
 
-        self.vertLay.addLayout(NumValues)
-
-        #self.ShowImage = QLabel()
-        #self.vertLay.addWidget(self.ShowImage)
-
-        self.Thing = QLabel("")
-
+        #self.vertLay.addLayout(NumValues)
+        j = QHBoxLayout()
         
 
-        self.vertLay.addWidget(self.Thing)
+        self.Thing = QLabel(" ")
+        for i in range(5):
+            j.addWidget(QLabel(" "))
 
+        
+        self.ShowImage = QLabel()
+        j.addWidget(self.ShowImage)
+        self.vertLay.addWidget(self.Thing)
+        self.vertLay.addLayout(j)
         
 
         self.setLayout(self.vertLay)
@@ -243,17 +246,21 @@ class main(QWidget):
         #self.element.setText(self.EL["name"])
     def Set(self):
         for Thing, Data in self.Mappings.items():
-            Thing.blockSignals(True)
-            try:
-                Value = self.EL[Data]
-            except :
-                Value = pTable[119]
-            try:
-                Thing.setText(str(Value))
-            except:
-                Thing.setValue(Value)
-            Thing.blockSignals(False)
-            
+            if Thing != self.url:
+                Thing.blockSignals(True)
+                try:
+                    Value = self.EL[Data]
+                except :
+                    Value = pTable[119]
+                try:
+                    Thing.setText(str(Value))
+                except:
+                    Thing.setValue(Value)
+                Thing.blockSignals(False)
+            else:
+                 Thing = self.EL[Data]
+                 self.GetImage
+                
 
 
         for elle in self.Collection:
@@ -262,7 +269,7 @@ class main(QWidget):
             else:
                 
                 elle.Label.setStyleSheet(elle.sheet)
-        #self.GetImage()
+        self.GetImage()
         
 
     def FindEl(self, inp, form):
